@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Lighter background */
+            color: #334155; /* Darker text for better contrast */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem; /* Increased padding */
+            background-color: #ffffff;
+            border-radius: 16px; /* More rounded corners */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Stronger shadow */
+        }
+        .header-section {
+            border-bottom: 1px solid #e2e8f0; /* Lighter border */
+            padding-bottom: 1.5rem; /* More padding */
+            margin-bottom: 2rem; /* More margin */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-section h1 {
+            color: #1a202c; /* Even darker heading */
+        }
+        .card {
+            background-color: #ffffff; /* White background for cards */
+            border: 1px solid #e2e8f0;
+            border-radius: 12px; /* More rounded card corners */
+            padding: 1.5rem; /* Increased padding */
+            margin-bottom: 1.25rem; /* More margin */
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem; /* Increased gap */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06); /* Subtle card shadow */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            font-weight: 700; /* Bolder header */
+            color: #1f2937;
+            font-size: 1.125rem; /* Slightly larger */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-details {
+            font-size: 0.9375rem; /* Slightly larger text */
+            color: #64748b; /* More subtle grey */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .action-buttons button {
+            padding: 0.5rem 1rem; /* More padding */
+            border-radius: 8px; /* More rounded buttons */
+            font-size: 0.9375rem; /* Slightly larger font */
+            font-weight: 600; /* Bolder font */
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .action-buttons .edit-btn {
+            background-color: #e0f7fa; /* Lighter blue */
+            color: #00796b; /* Teal color */
+        }
+        .action-buttons .edit-btn:hover {
+            background-color: #b2dfdb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 121, 107, 0.2);
+        }
+        .action-buttons .delete-btn {
+            background-color: #ffebee; /* Lighter red */
+            color: #d32f2f; /* Darker red */
+        }
+        .action-buttons .delete-btn:hover {
+            background-color: #ef9a9a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+        }
+        .primary-btn {
+            background-color: #1e40af; /* Darker blue */
+            color: white;
+            padding: 0.85rem 1.8rem; /* More padding */
+            border-radius: 10px; /* More rounded */
+            font-weight: 700; /* Bolder */
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3); /* Blue shadow */
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .primary-btn:hover {
+            background-color: #1c3b9a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
+        }
+        .secondary-btn {
+            background-color: #e2e8f0; /* Lighter grey */
+            color: #475569; /* Darker grey */
+            padding: 0.85rem 1.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .secondary-btn:hover {
+            background-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+        input[type="text"], input[type="file"], select, textarea {
+            border: 1px solid #cbd5e1; /* Lighter border */
+            border-radius: 8px; /* More rounded */
+            padding: 0.75rem 1.25rem; /* More padding */
+            width: 100%;
+            font-size: 1rem;
+            color: #334155;
+            background-color: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: #3b82f6; /* Blue focus border */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Blue focus shadow */
+            outline: none;
+        }
+        input[type="checkbox"] {
+            transform: scale(1.1); /* Slightly larger checkbox */
+            margin-right: 0.6rem; /* More space */
+            accent-color: #1e40af; /* Blue checkbox color */
+        }
+        .tooltip-icon {
+            cursor: help;
+            color: #64748b;
+            font-weight: bold;
+            font-size: 1rem; /* Slightly larger */
+            margin-left: 0.4rem; /* More space */
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.5); /* Darker overlay */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 2.5rem; /* More padding */
+            border-radius: 16px; /* More rounded */
+            box-shadow: 0 12px 36px rgba(0,0,0,0.3); /* Stronger shadow */
+            width: 90%;
+            max-width: 750px; /* Slightly wider modal */
+            position: relative;
+        }
+        .close-button {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            font-size: 1.75rem; /* Larger close button */
+            font-weight: bold;
+            cursor: pointer;
+            color: #64748b;
+            transition: color 0.2s;
+        }
+        .close-button:hover {
+            color: #1a202c;
+        }
+        /* SVG Icons Styling */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Main Configurations List View -->
+        <div id="configListView" class="view">
+            <div class="header-section">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-1">Configuration Management</h1>
+                    <h2 class="text-xl font-medium text-gray-600">Manage test configurations for your environment</h2>
+                </div>
+                <button class="primary-btn flex items-center gap-2" onclick="showView('addEditConfigView', 'Add New Configuration')">
+                    <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z"></path></svg>
+                    Add Configuration
+                </button>
+            </div>
+
+            <!-- Filter Configurations Section -->
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Filter Configurations</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div>
+                        <label for="filterOs" class="block text-sm font-medium text-gray-700 mb-1">Operating System</label>
+                        <select id="filterOs" class="w-full">
+                            <option value="">All OS</option>
+                            <option value="Windows">Windows</option>
+                            <option value="macOS">macOS</option>
+                            <option value="Linux">Linux</option>
+                            <option value="Android">Android</option>
+                            <option value="iOS">iOS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filterDeviceType" class="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
+                        <select id="filterDeviceType" class="w-full">
+                            <option value="">All Devices</option>
+                            <option value="Desktop">Desktop</option>
+                            <option value="Real Device">Real Device</option>
+                            <option value="Virtual Device">Virtual Device</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filterApplication" class="block text-sm font-medium text-gray-700 mb-1">Application</label>
+                        <select id="filterApplication" class="w-full">
+                            <option value="">All Apps</option>
+                            <option value="MyMobileApp">MyMobileApp</option>
+                            <option value="MyWebApp">MyWebApp</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filterVersion" class="block text-sm font-medium text-gray-700 mb-1">Version</label>
+                        <input type="text" id="filterVersion" placeholder="e.g. 1.x" class="w-full" />
+                    </div>
+                </div>
+                <button class="primary-btn px-6 py-3 text-base">Apply Filters</button>
+            </div>
+
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Configurations (3)</h3>
+                <div class="flex items-center gap-2">
+                    <label for="sortBy" class="text-sm font-medium text-gray-700">Sort by:</label>
+                    <select id="sortBy" class="w-auto px-4 py-2 text-sm rounded-md border border-gray-300 bg-white">
+                        <option value="recentlyAdded">Recently Added</option>
+                        <option value="name">Name (A-Z)</option>
+                        <option value="type">Type</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="configurationsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dummy Configuration Cards -->
+                <div class="card">
+                    <div class="card-header">
+                        Web Testing Suite
+                        <button class="text-gray-500 hover:text-blue-600 transition-colors" onclick="showView('addEditConfigView', 'Edit Configuration', 'Desktop_Chrome_Win10')">
+                            <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.7574 2.99998L19.7574 5.99998L10.9999 14.7574L8.00001 11.7574L16.7574 2.99998ZM21.1924 4.00001L22.6066 5.41422L15.5355 12.4853L14.1213 11.0711L21.1924 4.00001ZM11.0001 16.7573L12.4143 18.1716L4.24268 20.0001L2.82846 18.5859L4.65688 10.4142L11.0001 16.7573ZM2 21H22V23H2V21Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="card-details text-gray-500">Updated 2 days ago</div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        Windows 11
+                    </div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        Desktop
+                    </div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        Chrome Browser
+                    </div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        v104.0.5112
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        Mobile Regression
+                        <button class="text-gray-500 hover:text-blue-600 transition-colors" onclick="showView('addEditConfigView', 'Edit Configuration', 'RealDevice_iPhone_iOS17_MyMobileApp')">
+                            <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.7574 2.99998L19.7574 5.99998L10.9999 14.7574L8.00001 11.7574L16.7574 2.99998ZM21.1924 4.00001L22.6066 5.41422L15.5355 12.4853L14.1213 11.0711L21.1924 4.00001ZM11.0001 16.7573L12.4143 18.1716L4.24268 20.0001L2.82846 18.5859L4.65688 10.4142L11.0001 16.7573ZM2 21H22V23H2V21Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="card-details text-gray-500">Updated 1 week ago</div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        iOS 16
+                    </div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        iPhone 14
+                    </div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        Mobile App
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        API Test Config
+                        <button class="text-gray-500 hover:text-blue-600 transition-colors" onclick="showView('addEditConfigView', 'Edit Configuration', 'VirtualDevice_Android_Chrome_PixelEmulator')">
+                            <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.7574 2.99998L19.7574 5.99998L10.9999 14.7574L8.00001 11.7574L16.7574 2.99998ZM21.1924 4.00001L22.6066 5.41422L15.5355 12.4853L14.1213 11.0711L21.1924 4.00001ZM11.0001 16.7573L12.4143 18.1716L4.24268 20.0001L2.82846 18.5859L4.65688 10.4142L11.0001 16.7573ZM2 21H22V23H2V21Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="card-details text-gray-500">Updated 3 days ago</div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        Linux
+                    </div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        Cloud VM
+                    </div>
+                    <div class="card-details">
+                        <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                        API Service
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-10">
+                <div class="flex gap-2">
+                    <button class="secondary-btn px-5 py-2 text-sm">&lt; Previous</button>
+                    <button class="primary-btn px-5 py-2 text-sm">1</button>
+                    <button class="secondary-btn px-5 py-2 text-sm">2</button>
+                    <button class="secondary-btn px-5 py-2 text-sm">3</button>
+                    <button class="secondary-btn px-5 py-2 text-sm">Next &gt;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Configuration Screen -->
+        <div id="addEditConfigView" class="view hidden">
+            <div class="header-section">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-1">KaneAI & Test Manager</h1>
+                    <h2 id="addEditConfigTitle" class="text-2xl font-semibold text-gray-700">Add New Configuration</h2>
+                </div>
+                <button class="secondary-btn flex items-center gap-2" onclick="showView('configListView')">
+                    <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.8284 12.0007L15.7574 16.9296L14.3431 18.3439L8 12.0007L14.3431 5.65742L15.7574 7.07163L10.8284 12.0007Z"></path></svg>
+                    Back to List
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="col-span-full">
+                    <label for="configName" class="block text-base font-medium text-gray-700 mb-2">Configuration Name:</label>
+                    <input type="text" id="configName" value="" placeholder="e.g., Desktop_Chrome_Win10" />
+                </div>
+
+                <div>
+                    <label for="deviceType" class="block text-base font-medium text-gray-700 mb-2">Device Type:</label>
+                    <select id="deviceType" onchange="updateConfigFields(this.value)">
+                        <option value="Desktop">Desktop</option>
+                        <option value="Real Device">Real Device</option>
+                        <option value="Virtual Device">Virtual Device</option>
+                    </select>
+                </div>
+
+                <div id="realDeviceSubType" class="hidden">
+                    <label for="subType" class="block text-base font-medium text-gray-700 mb-2">Sub-type:</label>
+                    <select id="subType">
+                        <option value="Public Cloud">Public Cloud</option>
+                        <option value="Private Cloud">Private Cloud</option>
+                    </select>
+                </div>
+
+                <div id="osField">
+                    <label for="os" class="block text-base font-medium text-gray-700 mb-2">OS:</label>
+                    <select id="os">
+                        <option value="Windows">Windows</option>
+                        <option value="macOS">macOS</option>
+                        <option value="Linux">Linux</option>
+                        <option value="Android">Android</option>
+                        <option value="iOS">iOS</option>
+                    </select>
+                </div>
+
+                <div id="osVersionField">
+                    <label for="osVersion" class="block text-base font-medium text-gray-700 mb-2">OS Version:</label>
+                    <input type="text" id="osVersion" placeholder="e.g., 10, Ventura, 22.04" />
+                    <div class="flex items-center mt-2">
+                        <input type="checkbox" id="osVersionRegexToggle" onchange="toggleRegexInput('osVersion', 'osVersionRegexInput', this.checked)">
+                        <label for="osVersionRegexToggle" class="text-sm text-gray-600">Use Regular Expression</label>
+                        <span class="tooltip-icon" title="Examples: 1[6-7].*, ^(?!.*beta).*">[?]</span>
+                    </div>
+                    <input type="text" id="osVersionRegexInput" class="hidden mt-3" placeholder="Enter regex for OS Version" />
+                </div>
+
+                <div id="browserField">
+                    <label for="browser" class="block text-base font-medium text-gray-700 mb-2">Browser:</label>
+                    <select id="browser">
+                        <option value="Chrome">Chrome</option>
+                        <option value="Firefox">Firefox</option>
+                        <option value="Edge">Edge</option>
+                        <option value="Safari">Safari</option>
+                    </select>
+                </div>
+
+                <div id="browserVersionField">
+                    <label for="browserVersion" class="block text-base font-medium text-gray-700 mb-2">Browser Version:</label>
+                    <input type="text" id="browserVersion" placeholder="e.g., 126.0" />
+                </div>
+
+                <div id="resolutionField">
+                    <label for="resolution" class="block text-base font-medium text-gray-700 mb-2">Resolution:</label>
+                    <input type="text" id="resolution" placeholder="e.g., 1920x1080" />
+                </div>
+
+                <div id="manufacturerField" class="hidden">
+                    <label for="manufacturer" class="block text-base font-medium text-gray-700 mb-2">Manufacturer:</label>
+                    <input type="text" id="manufacturer" placeholder="e.g., Apple, Samsung" />
+                    <div class="flex items-center mt-2">
+                        <input type="checkbox" id="manufacturerRegexToggle" onchange="toggleRegexInput('manufacturer', 'manufacturerRegexInput', this.checked)">
+                        <label for="manufacturerRegexToggle" class="text-sm text-gray-600">Use Regular Expression</label>
+                        <span class="tooltip-icon" title="Examples: Samsung|Google, Apple.*">[?]</span>
+                    </div>
+                    <input type="text" id="manufacturerRegexInput" class="hidden mt-3" placeholder="Enter regex for Manufacturer" />
+                </div>
+
+                <div id="deviceNameField" class="hidden">
+                    <label for="deviceName" class="block text-base font-medium text-gray-700 mb-2">Device Name:</label>
+                    <input type="text" id="deviceName" placeholder="e.g., iPhone 15 Pro, Pixel 8" />
+                    <div class="flex items-center mt-2">
+                        <input type="checkbox" id="deviceNameRegexToggle" onchange="toggleRegexInput('deviceName', 'deviceNameRegexInput', this.checked)">
+                        <label for="deviceNameRegexToggle" class="text-sm text-gray-600">Use Regular Expression</label>
+                        <span class="tooltip-icon" title="Examples: iPhone (1[4-5]|SE).*, Pixel [7-8]$">[?]</span>
+                    </div>
+                    <input type="text" id="deviceNameRegexInput" class="hidden mt-3" placeholder="Enter regex for Device Name" />
+                </div>
+
+                <div id="applicationField" class="hidden col-span-full">
+                    <label for="application" class="block text-base font-medium text-gray-700 mb-2">Application (Optional):</label>
+                    <div class="flex items-center gap-4">
+                        <span id="selectedApplication" class="text-gray-600 font-medium">No application selected.</span>
+                        <button class="secondary-btn px-5 py-2 text-sm whitespace-nowrap flex items-center gap-1" onclick="showApplicationSelectionModal()">
+                            <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z"></path></svg>
+                            Select Application
+                        </button>
+                        <button id="changeApplicationBtn" class="secondary-btn px-5 py-2 text-sm whitespace-nowrap hidden flex items-center gap-1" onclick="showApplicationSelectionModal()">
+                            <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.7574 2.99998L19.7574 5.99998L10.9999 14.7574L8.00001 11.7574L16.7574 2.99998ZM21.1924 4.00001L22.6066 5.41422L15.5355 12.4853L14.1213 11.0711L21.1924 4.00001ZM11.0001 16.7573L12.4143 18.1716L4.24268 20.0001L2.82846 18.5859L4.65688 10.4142L11.0001 16.7573ZM2 21H22V23H2V21Z"></path></svg>
+                            Change
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 mt-10">
+                <button class="secondary-btn" onclick="showView('configListView')">Cancel</button>
+                <button class="primary-btn" onclick="alert('Configuration Saved!')">Save Configuration</button>
+            </div>
+        </div>
+
+        <!-- Allocation to Test Run (within Test Manager) - Simplified View -->
+        <div id="testRunAllocationView" class="view hidden">
+            <div class="header-section">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-1">Test Manager</h1>
+                    <h2 class="text-2xl font-semibold text-gray-700">Create/Edit Test Run</h2>
+                </div>
+                <button class="secondary-btn flex items-center gap-2" onclick="showView('configListView')">
+                    <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.8284 12.0007L15.7574 16.9296L14.3431 18.3439L8 12.0007L14.3431 5.65742L15.7574 7.07163L10.8284 12.0007Z"></path></svg>
+                    Back to Configurations
+                </button>
+            </div>
+
+            <div class="mb-8">
+                <label for="testRunName" class="block text-base font-medium text-gray-700 mb-2">Test Run Name:</label>
+                <input type="text" id="testRunName" value="Regression Suite - Sprint 12" />
+                <p class="text-sm text-gray-500 mt-2">... (Other Test Run details) ...</p>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Configurations for this Test Run:</h3>
+
+            <div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+                <div class="flex-grow w-full md:w-auto relative">
+                    <input type="text" placeholder="Filter configurations..." class="w-full pl-10" />
+                    <svg class="icon w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM10 16C6.68629 16 4 13.3137 4 10C4 6.68629 6.68629 4 10 4C13.3137 4 16 6.68629 16 10C16 13.3137 13.3137 16 10 16ZM19.4853 18.0711L22.3137 20.8995L20.8995 22.3137L18.0711 19.4853L19.4853 18.0711Z"></path></svg>
+                </div>
+                <div class="w-full md:w-auto">
+                    <select class="w-full">
+                        <option value="">Filter by Type</option>
+                        <option value="Desktop">Desktop</option>
+                        <option value="Real Device">Real Device</option>
+                        <option value="Virtual Device">Virtual Device</option>
+                    </select>
+                </div>
+                <button class="secondary-btn whitespace-nowrap w-full md:w-auto flex items-center gap-1" onclick="alert('Add Existing Configuration Modal would open')">
+                    <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z"></path></svg>
+                    Add Existing
+                </button>
+                <button class="secondary-btn whitespace-nowrap w-full md:w-auto flex items-center gap-1" onclick="showView('addEditConfigView', 'Create New Configuration')">
+                    <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z"></path></svg>
+                    Create New
+                </button>
+            </div>
+
+            <div id="testRunConfigurationsList" class="space-y-4">
+                <div class="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                    <input type="checkbox" checked class="mr-4" />
+                    <span class="font-medium text-gray-800 text-lg">Desktop_Chrome_Win10</span>
+                    <span class="text-base text-gray-600 ml-auto hidden sm:block">OS: Windows, Browser: Chrome</span>
+                </div>
+                <div class="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                    <input type="checkbox" checked class="mr-4" />
+                    <span class="font-medium text-gray-800 text-lg">RealDevice_iPhone_iOS17_MyMobileApp</span>
+                    <span class="text-base text-gray-600 ml-auto hidden sm:block">OS: iOS, Device: iPhone 15 Pro</span>
+                </div>
+                <div class="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                    <input type="checkbox" class="mr-4" />
+                    <span class="font-medium text-gray-800 text-lg">Desktop_Firefox_Linux</span>
+                    <span class="text-base text-gray-600 ml-auto hidden sm:block">OS: Linux, Browser: Firefox</span>
+                </div>
+                <div class="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                    <input type="checkbox" class="mr-4" />
+                    <span class="font-medium text-gray-800 text-lg">RealDevice_Android_Samsung_OS14</span>
+                    <span class="text-base text-gray-600 ml-auto hidden sm:block">OS: Android, Device: Samsung</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 mt-10">
+                <button class="secondary-btn" onclick="showView('configListView')">Cancel</button>
+                <button class="primary-btn" onclick="alert('Test Run Saved!')">Save Test Run</button>
+            </div>
+        </div>
+
+        <!-- Application Management Interface -->
+        <div id="appListView" class="view hidden">
+            <div class="header-section">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-1">KaneAI & Test Manager</h1>
+                    <h2 class="text-2xl font-semibold text-gray-700">Application Management</h2>
+                </div>
+                <button class="primary-btn flex items-center gap-2" onclick="showView('uploadAppView')">
+                    <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C11.4477 4 11 4.44772 11 5V11H5C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13H11V19C11 19.5523 11.4477 20 12 20C12.5523 20 13 19.5523 13 19V13H19C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11H13V5C13 4.44772 12.5523 4 12 4Z"></path></svg>
+                    Upload New Application
+                </button>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
+                <div class="flex-grow w-full md:w-auto relative">
+                    <input type="text" placeholder="Search applications..." class="w-full pl-10" />
+                    <svg class="icon w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM10 16C6.68629 16 4 13.3137 4 10C4 6.68629 6.68629 4 10 4C13.3137 4 16 6.68629 16 10C16 13.3137 13.3137 16 10 16ZM19.4853 18.0711L22.3137 20.8995L20.8995 22.3137L18.0711 19.4853L19.4853 18.0711Z"></path></svg>
+                </div>
+            </div>
+
+            <div id="applicationsList">
+                <!-- Dummy Application Cards -->
+                <div class="card">
+                    <div class="card-header">
+                        MyMobileApp
+                        <div class="action-buttons flex gap-3">
+                            <button class="edit-btn" onclick="showManageVersionsModal('MyMobileApp')">
+                                <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                                View Versions
+                            </button>
+                            <button class="edit-btn" onclick="alert('Edit details for MyMobileApp?')">
+                                <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.7574 2.99998L19.7574 5.99998L10.9999 14.7574L8.00001 11.7574L16.7574 2.99998ZM21.1924 4.00001L22.6066 5.41422L15.5355 12.4853L14.1213 11.0711L21.1924 4.00001ZM11.0001 16.7573L12.4143 18.1716L4.24268 20.0001L2.82846 18.5859L4.65688 10.4142L11.0001 16.7573ZM2 21H22V23H2V21Z"></path></svg>
+                                Edit Details
+                            </button>
+                            <button class="delete-btn" onclick="alert('Delete MyMobileApp?')">
+                                <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6ZM9 4H15V6H9V4ZM6 8V20H18V8H6ZM9 10H11V18H9V10ZM13 10H15V18H13V10Z"></path></svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-details">Latest Version: <span class="font-semibold">v2.0</span> (Uploaded: 2025-07-15)</div>
+                    <div class="card-details">Used in: <span class="font-semibold">2 Configurations</span></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        MyWebApp
+                        <div class="action-buttons flex gap-3">
+                            <button class="edit-btn" onclick="showManageVersionsModal('MyWebApp')">
+                                <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4ZM11 11H8V13H11V16H13V13H16V11H13V8H11V11Z"></path></svg>
+                                View Versions
+                            </button>
+                            <button class="edit-btn" onclick="alert('Edit details for MyWebApp?')">
+                                <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.7574 2.99998L19.7574 5.99998L10.9999 14.7574L8.00001 11.7574L16.7574 2.99998ZM21.1924 4.00001L22.6066 5.41422L15.5355 12.4853L14.1213 11.0711L21.1924 4.00001ZM11.0001 16.7573L12.4143 18.1716L4.24268 20.0001L2.82846 18.5859L4.65688 10.4142L11.0001 16.7573ZM2 21H22V23H2V21Z"></path></svg>
+                                Edit Details
+                            </button>
+                            <button class="delete-btn" onclick="alert('Delete MyWebApp?')">
+                                <svg class="icon w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6ZM9 4H15V6H9V4ZM6 8V20H18V8H6ZM9 10H11V18H9V10ZM13 10H15V18H13V10Z"></path></svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-details">Latest Version: <span class="font-semibold">v1.3</span> (Uploaded: 2025-07-10)</div>
+                    <div class="card-details">Used in: <span class="font-semibold">5 Configurations</span></div>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-10">
+                <div class="flex gap-2">
+                    <button class="secondary-btn px-5 py-2 text-sm">&lt; Previous</button>
+                    <button class="primary-btn px-5 py-2 text-sm">1</button>
+                    <button class="secondary-btn px-5 py-2 text-sm">2</button>
+                    <button class="secondary-btn px-5 py-2 text-sm">Next &gt;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Application Screen -->
+        <div id="uploadAppView" class="view hidden">
+            <div class="header-section">
+                <div>
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-1">KaneAI & Test Manager</h1>
+                    <h2 class="text-2xl font-semibold text-gray-700">Upload New Application</h2>
+                </div>
+                <button class="secondary-btn flex items-center gap-2" onclick="showView('appListView')">
+                    <svg class="icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.8284 12.0007L15.7574 16.9296L14.3431 18.3439L8 12.0007L14.3431 5.65742L15.7574 7.07163L10.8284 12.0007Z"></path></svg>
+                    Back to List
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 gap-8">
+                <div>
+                    <label for="appName" class="block text-base font-medium text-gray-700 mb-2">Application Name:</label>
+                    <input type="text" id="appName" placeholder="e.g., MyNewMobileApp" />
+                </div>
+                <div>
+                    <label for="versionName" class="block text-base font-medium text-gray-700 mb-2">Version Name/Tag:</label>
+                    <input type="text" id="versionName" placeholder="e.g., v1.0.0" />
+                </div>
+                <div>
+                    <label for="appFile" class="block text-base font-medium text-gray-700 mb-2">File Upload:</label>
+                    <input type="file" id="appFile" class="block w-full text-base text-gray-700
+                        file:mr-4 file:py-3 file:px-6
+                        file:rounded-lg file:border-0
+                        file:text-base file:font-semibold
+                        file:bg-blue-100 file:text-blue-700
+                        hover:file:bg-blue-200 cursor-pointer" />
+                    <p class="text-sm text-gray-500 mt-2">Accepted formats: .apk, .ipa</p>
+                </div>
+                <div>
+                    <label for="customId" class="block text-base font-medium text-gray-700 mb-2">Custom ID (Optional, for API updates):</label>
+                    <input type="text" id="customId" placeholder="e.g., my_app_android_prod" />
+                    <p class="text-sm text-gray-500 mt-2 flex items-center">
+                        <span class="tooltip-icon" title="This ID allows automatic updates when new files with the same ID are uploaded via API.">[?]</span>
+                        This ID allows automatic updates when new files with the same ID are uploaded via API.
+                    </p>
+                </div>
+                <div>
+                    <label for="appDescription" class="block text-base font-medium text-gray-700 mb-2">Description:</label>
+                    <textarea id="appDescription" rows="4" class="resize-y" placeholder="This is the initial release of our new app. (Optional, max 250 characters)"></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4 mt-10">
+                <button class="secondary-btn" onclick="showView('appListView')">Cancel</button>
+                <button class="primary-btn" onclick="alert('Application Uploaded!')">Upload Application</button>
+            </div>
+        </div>
+
+        <!-- Manage Application Versions Modal -->
+        <div id="manageVersionsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal('manageVersionsModal')">&times;</span>
+                <h3 id="manageVersionsTitle" class="text-2xl font-semibold text-gray-800 mb-6">MyMobileApp - Versions</h3>
+                <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6 text-left">Version</th>
+                                <th class="py-3 px-6 text-left">Upload Date</th>
+                                <th class="py-3 px-6 text-left">Used in Configs</th>
+                                <th class="py-3 px-6 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 text-base">
+                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                <td class="py-4 px-6">v2.0</td>
+                                <td class="py-4 px-6">2025-07-15</td>
+                                <td class="py-4 px-6">
+                                    <span class="block">RealDevice_iOS17</span>
+                                    <span class="block">RealDevice_Android14</span>
+                                </td>
+                                <td class="py-4 px-6 flex justify-center gap-3">
+                                    <button class="edit-btn px-4 py-2 text-sm" onclick="alert('Set v2.0 as current?')">Set as Current</button>
+                                    <button class="delete-btn px-4 py-2 text-sm" onclick="alert('Delete v2.0?')">Delete</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                <td class="py-4 px-6">v1.0.1</td>
+                                <td class="py-4 px-6">2025-06-20</td>
+                                <td class="py-4 px-6">None</td>
+                                <td class="py-4 px-6 flex justify-center gap-3">
+                                    <button class="edit-btn px-4 py-2 text-sm" onclick="alert('Set v1.0.1 as current?')">Set as Current</button>
+                                    <button class="delete-btn px-4 py-2 text-sm" onclick="alert('Delete v1.0.1?')">Delete</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-4 px-6">v1.0</td>
+                                <td class="py-4 px-6">2025-06-01</td>
+                                <td class="py-4 px-6">None</td>
+                                <td class="py-4 px-6 flex justify-center gap-3">
+                                    <button class="edit-btn px-4 py-2 text-sm" onclick="alert('Set v1.0 as current?')">Set as Current</button>
+                                    <button class="delete-btn px-4 py-2 text-sm" onclick="alert('Delete v1.0?')">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flex justify-end mt-8">
+                    <button class="secondary-btn" onclick="closeModal('manageVersionsModal')">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Function to show a specific view and hide others
+        function showView(viewId, title = '', configName = '') {
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+
+            // Update title for Add/Edit Config View
+            if (viewId === 'addEditConfigView') {
+                document.getElementById('addEditConfigTitle').innerText = title;
+                if (configName) {
+                    document.getElementById('configName').value = configName;
+                    // Simulate loading existing config data
+                    if (configName.includes('Desktop')) {
+                        document.getElementById('deviceType').value = 'Desktop';
+                        updateConfigFields('Desktop');
+                        document.getElementById('os').value = 'Windows';
+                        document.getElementById('osVersion').value = '10';
+                        document.getElementById('browser').value = 'Chrome';
+                        document.getElementById('browserVersion').value = '126.0';
+                        document.getElementById('resolution').value = '1920x1080';
+                    } else if (configName.includes('RealDevice')) {
+                        document.getElementById('deviceType').value = 'Real Device';
+                        updateConfigFields('Real Device');
+                        document.getElementById('subType').value = 'Public Cloud';
+                        document.getElementById('os').value = 'iOS';
+                        document.getElementById('osVersion').value = '17';
+                        document.getElementById('manufacturer').value = 'Apple';
+                        document.getElementById('deviceName').value = 'iPhone 15 Pro';
+                        document.getElementById('selectedApplication').innerText = 'MyMobileApp_v1.0.ipa';
+                        document.getElementById('changeApplicationBtn').classList.remove('hidden');
+                    } else if (configName.includes('VirtualDevice')) {
+                        document.getElementById('deviceType').value = 'Virtual Device';
+                        updateConfigFields('Virtual Device');
+                        document.getElementById('os').value = 'Android';
+                        document.getElementById('osVersion').value = '13';
+                        document.getElementById('browser').value = 'Chrome';
+                        document.getElementById('manufacturer').value = 'Google';
+                        document.getElementById('deviceName').value = 'Pixel 7 Emulator';
+                    }
+                } else {
+                    // Reset fields for new configuration
+                    document.getElementById('configName').value = '';
+                    document.getElementById('deviceType').value = 'Desktop';
+                    updateConfigFields('Desktop');
+                    document.getElementById('os').value = 'Windows';
+                    document.getElementById('osVersion').value = '';
+                    document.getElementById('browser').value = 'Chrome';
+                    document.getElementById('browserVersion').value = '';
+                    document.getElementById('resolution').value = '';
+                    document.getElementById('manufacturer').value = '';
+                    document.getElementById('deviceName').value = '';
+                    document.getElementById('selectedApplication').innerText = 'No application selected.';
+                    document.getElementById('changeApplicationBtn').classList.add('hidden');
+
+                    // Reset regex toggles and inputs
+                    document.getElementById('osVersionRegexToggle').checked = false;
+                    toggleRegexInput('osVersion', 'osVersionRegexInput', false);
+                    document.getElementById('manufacturerRegexToggle').checked = false;
+                    toggleRegexInput('manufacturer', 'manufacturerRegexInput', false);
+                    document.getElementById('deviceNameRegexToggle').checked = false;
+                    toggleRegexInput('deviceName', 'deviceNameRegexInput', false);
+                }
+            }
+        }
+
+        // Function to dynamically update fields based on Device Type
+        function updateConfigFields(deviceType) {
+            // Hide all optional fields first
+            document.getElementById('realDeviceSubType').classList.add('hidden');
+            document.getElementById('browserField').classList.add('hidden');
+            document.getElementById('browserVersionField').classList.add('hidden');
+            document.getElementById('resolutionField').classList.add('hidden');
+            document.getElementById('manufacturerField').classList.add('hidden');
+            document.getElementById('deviceNameField').classList.add('hidden');
+            document.getElementById('applicationField').classList.add('hidden');
+
+            // Reset OS options to default
+            const osSelect = document.getElementById('os');
+            osSelect.innerHTML = ''; // Clear existing options
+
+            if (deviceType === 'Desktop') {
+                osSelect.innerHTML = `
+                    <option value="Windows">Windows</option>
+                    <option value="macOS">macOS</option>
+                    <option value="Linux">Linux</option>
+                `;
+                document.getElementById('browserField').classList.remove('hidden');
+                document.getElementById('browserVersionField').classList.remove('hidden');
+                document.getElementById('resolutionField').classList.remove('hidden');
+            } else if (deviceType === 'Real Device') {
+                osSelect.innerHTML = `
+                    <option value="Android">Android</option>
+                    <option value="iOS">iOS</option>
+                `;
+                document.getElementById('realDeviceSubType').classList.remove('hidden');
+                document.getElementById('manufacturerField').classList.remove('hidden');
+                document.getElementById('deviceNameField').classList.remove('hidden');
+                document.getElementById('applicationField').classList.remove('hidden');
+            } else if (deviceType === 'Virtual Device') {
+                osSelect.innerHTML = `
+                    <option value="Android">Android</option>
+                    <option value="iOS">iOS</option>
+                `;
+                document.getElementById('browserField').classList.remove('hidden');
+                document.getElementById('manufacturerField').classList.remove('hidden');
+                document.getElementById('deviceNameField').classList.remove('hidden');
+            }
+        }
+
+        // Function to toggle regex input field visibility
+        function toggleRegexInput(fieldId, regexFieldId, isChecked) {
+            const inputField = document.getElementById(fieldId);
+            const regexInputField = document.getElementById(regexFieldId);
+
+            if (isChecked) {
+                inputField.classList.add('hidden');
+                regexInputField.classList.remove('hidden');
+            } else {
+                inputField.classList.remove('hidden');
+                regexInputField.classList.add('hidden');
+                regexInputField.value = ''; // Clear regex input when toggled off
+            }
+        }
+
+        // Function to show the application selection modal
+        function showApplicationSelectionModal() {
+            alert("Application Selection Modal would open here to choose an app from the Application Management list.");
+            // In a real implementation, this would show the #manageVersionsModal or a similar modal
+            // For this basic design, an alert is used to simulate the action.
+            document.getElementById('selectedApplication').innerText = 'MyMobileApp_v1.0.ipa'; // Simulate selection
+            document.getElementById('changeApplicationBtn').classList.remove('hidden');
+        }
+
+        // Function to show a modal
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        // Function to close a modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Function to show Manage Versions Modal with specific app title
+        function showManageVersionsModal(appName) {
+            document.getElementById('manageVersionsTitle').innerText = `${appName} - Versions`;
+            showModal('manageVersionsModal');
+        }
+
+        // Initial view setup
+        document.addEventListener('DOMContentLoaded', () => {
+            showView('configListView');
+            updateConfigFields(document.getElementById('deviceType').value); // Initialize fields based on default device type
+        });
+    </script>
+</body>
+</html>
